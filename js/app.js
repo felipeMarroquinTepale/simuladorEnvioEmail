@@ -63,16 +63,8 @@ document.addEventListener('DOMContentLoaded',function(){
     function validar(e){
         // console.log(e.target.parentElement);
 
-        if(e.target.name ==='cc'){
-            if(e.target.value.trim()!== ''&& !validarEmail(e.target.value)){
-                mostrarAlerta('El campo cc no tiene un email valido',e.target.parentElement);
-                email[e.target.name] = '';
-                comprobarEmail();
-                return;
-            }
-        }
 
-        if(e.target.value.trim() ===''){
+        if(e.target.value.trim() ==='' && e.target.name !== 'cc'){
             mostrarAlerta(`El campo ${e.target.id} es obligatorio`,e.target.parentElement);
             email[e.target.name] = '';
             comprobarEmail();
@@ -85,18 +77,37 @@ document.addEventListener('DOMContentLoaded',function(){
             comprobarEmail();
             return;
         }
+
+        if(e.target.name === 'cc' && e.target.value.trim()!== '' && !validarEmail(e.target.value)){
+            mostrarAlerta('El campo cc no tiene un email valido',e.target.parentElement);
+            email[e.target.name] = '';
+            comprobarEmail();
+            return;
+        }
+
+
         limpiarAlerta(e.target.parentElement);
+
+
+
 
         //Asignar los valores
         email[e.target.name] = e.target.value.toLowerCase();
         console.log(email)
 
+
+        if(email.cc === ''){
+            delete email.cc
+            //comprobar el objeto email
+            comprobarEmail();
+            return
+        }
         //comprobar el objeto email
         comprobarEmail();
     }
 
     function comprobarEmail(){
-
+        // if(email.cc !== ''){}
         if(Object.values(email).includes('')){
             btnSubmit.classList.add('opacity-50');
             btnSubmit.disabled = true;
@@ -104,6 +115,7 @@ document.addEventListener('DOMContentLoaded',function(){
         }
         btnSubmit.classList.remove('opacity-50');
         btnSubmit.disabled = false;
+        return;
     }
 
     function limpiarAlerta(referencia){
